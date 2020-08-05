@@ -46,9 +46,9 @@ typedef struct RCCType {
 #define RCC_BASE			(0x40021000)
 #define RCC					((volatile RCCType* const)RCC_BASE)
 
-#define RCC_GPIOA_ENABLE  	((u32) 0x00000002)
-#define RCC_GPIOB_ENABLE	((u32) 0x00000004)
-#define RCC_GPIOC_ENABLE	((u32) 0x00000008)
+#define RCC_GPIOA_ENABLE  	((u32) 0x00000004)
+#define RCC_GPIOB_ENABLE	((u32) 0x00000008)
+#define RCC_GPIOC_ENABLE	((u32) 0x00000010)
 
 
 #define ENABLE 				((u8) 0xff)

@@ -26,7 +26,7 @@
 /****************************************************************************/
 /*							HEADER INCLUDES									*/
 /****************************************************************************/
-#include "../01-LIB/01-STD_TYPES/STD_TYPES.h"
+#include "../../01-LIB/01-STD_TYPES/STD_TYPES.h"
 
 #include "GPIO_int.h"
 #include "GPIO_cfg.h"
@@ -51,7 +51,7 @@ GPIO_ErrorStatusType GPIO_enuSetPinValue(u8 const u8PinNameCpy, u8 const u8PinVa
 
 /*	u32PinPositionLoc is used to determine which bit in the 32 bit regieter */
 /* 	we are going to change.													*/
-    u32 u32PinPositionLoc = FIRST_BIT_LOCATION;
+    u32 u32PinPositionLoc = u8PinNameCpy;
 
 /*  Check the name is in the range of available pins in the STM32f103c8t6.	*/
     if(u8PinNameCpy > GPIO_END_PIN){
@@ -71,11 +71,13 @@ GPIO_ErrorStatusType GPIO_enuSetPinValue(u8 const u8PinNameCpy, u8 const u8PinVa
 /*  Check the value that is needed to be assigned to the PIN.           	*/
             if(u8PinValueCpy == GPIO_HIGH ){
 /*	We use the BSRR Register for atomic Operations.							*/
-				 GPIOA->BSRR = u32PinPositionLoc <<u8PinNameCpy;
+				 GPIOA->BSRR = 
+						FIRST_BIT_LOCATION <<u32PinPositionLoc;
             }
             else{
 /*  if the Value to be assigned to the value is LOW.						*/
-				 GPIOA->BRR = u32PinPositionLoc << u8PinNameCpy;
+				 GPIOA->BRR = 
+						FIRST_BIT_LOCATION << u32PinPositionLoc;
             }
 		}
 /*  check if the name (u8PinNameCpy) of the pin is in PORTB.				*/
@@ -86,26 +88,31 @@ GPIO_ErrorStatusType GPIO_enuSetPinValue(u8 const u8PinNameCpy, u8 const u8PinVa
 /*  Check the value that is needed to be assigned to the PIN.				*/
 			if(u8PinValueCpy == GPIO_HIGH ){
 /*	We use the BSRR Register for atomic Operations.							*/
-				 GPIOB->BSRR = u32PinPositionLoc << ((u32)u8PinNameCpy);
+				 GPIOB->BSRR =
+						FIRST_BIT_LOCATION << u32PinPositionLoc;
             }
             else{
 /*  if the Value to be assigned to the value is LOW.						*/
-				 GPIOB->BRR = u32PinPositionLoc << ((u32)u8PinNameCpy);
+				 GPIOB->BRR = 
+						FIRST_BIT_LOCATION << u32PinPositionLoc;
             }
         }
 /*  check if the name (u8PinNameCpy) pin is in PORTC.						*/
         else{
-/*  if it is in range of PORTC, we calculate the position of the pin map register.              */
-            u32PinPositionLoc = u8PinNameCpy % PINS_PREV_TO_GPIOC;
+/*	If it is in PORTC we calculate the location of the pin relative to the 	*/
+/*	port because in stm32f103 (blue pill) there is only 3 pins in portc 	*/
+/* 	which are PIN13, PIN14, PIN15.											*/
+            u32PinPositionLoc = 
+					 (u8PinNameCpy % PINS_PREV_TO_GPIOC) + GPIOC_PINS_OFFSET;
 
 /*  Check the value that is needed to be assigned to the PIN.                                   */
 			if(u8PinValueCpy == GPIO_HIGH ){
 /*	We use the BSRR Register for atomic Operations.												*/
-				 GPIOC->BSRR = u32PinPositionLoc << ((u32)u8PinNameCpy);;
+				 GPIOC->BSRR = FIRST_BIT_LOCATION << u32PinPositionLoc;
 			}
             else{
 /*  if the Value to be assigned to the value is LOW.                                           */
-				 GPIOC->BRR = u32PinPositionLoc <<((u32)(u8PinNameCpy + GPIOC_PINS_OFFSET));
+				 GPIOC->BRR = FIRST_BIT_LOCATION << u32PinPositionLoc;
             }
         }
 	}
@@ -132,14 +139,14 @@ GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy )
         enuErrorStatusLoc = GPIO_UNDEFINED_NAME;
     }
 /*	Check on the Values of the u8ModeCpy argument.							*/
-    else if((u8ModeCpy != GPIO_GPO_PUSHPULL   )	&&
-			(u8ModeCpy != GPIO_GPO_OPEN_DRAIN )	&&
-			(u8ModeCpy != GPIO_AFO_PUSHPULL	  ) &&
-			(u8ModeCpy != GPIO_AFO_OPEN_DRAIN ) &&
-			(u8ModeCpy != GPIO_INPUT_ANALOG	  ) &&
-			(u8ModeCpy != GPIO_INPUT_FLOATING ) &&
-			(u8ModeCpy != GPIO_INPUT_PULLDOWN ) &&
-			(u8ModeCpy != GPIO_INPUT_PULLUP	  )
+    else if(( GPIO_GPO_PUSHPULL 	!=	u8ModeCpy)	&&
+			( GPIO_GPO_OPEN_DRAIN	!=	u8ModeCpy)	&&
+			( GPIO_AFO_PUSHPULL		!=	u8ModeCpy)	&&
+			( GPIO_AFO_OPEN_DRAIN	!=	u8ModeCpy)	&&
+			( GPIO_INPUT_ANALOG		!=	u8ModeCpy)	&&
+			( GPIO_INPUT_FLOATING	!=	u8ModeCpy)	&&
+			( GPIO_INPUT_PULLDOWN	!=	u8ModeCpy)	&&
+			( GPIO_INPUT_PULLUP		!=	u8ModeCpy)	
 			){
 /*	If the u8ModeCpy is neither one of the defined arguments then error		*/
 /* 	flag wil be assigned to the error status.								*/

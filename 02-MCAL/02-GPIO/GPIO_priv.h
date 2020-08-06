@@ -40,13 +40,14 @@ typedef struct GPIOType {
     u32 LCKR;					/* Port configuration lock register		*/    
 }GPIOType;
 
+typedef GPIOType *	pGPIOType;
 #define GPIOA_BASE              	((u32) 0x40010800)
 #define GPIOB_BASE              	((u32) 0x40010C00)
 #define GPIOC_BASE              	((u32) 0x40011000)
 
-#define GPIOA                       ((volatile GPIOType * const ) GPIOA_BASE)
-#define GPIOB                       ((volatile GPIOType * const ) GPIOB_BASE)
-#define GPIOC                       ((volatile GPIOType * const ) GPIOC_BASE)
+#define GPIOA                       ((volatile pGPIOType const ) GPIOA_BASE)
+#define GPIOB                       ((volatile pGPIOType const ) GPIOB_BASE)
+#define GPIOC                       ((volatile pGPIOType const ) GPIOC_BASE)
 
 
 #define GPIO_START_PIN                 	GPIO_PIN_NUM_00

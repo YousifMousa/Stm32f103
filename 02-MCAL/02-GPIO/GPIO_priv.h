@@ -30,7 +30,7 @@
 
 /*	All registers defined in a Structure with GPIOType. These Registers */
 /*	are ordered according to its location in memory.					*/
-typedef struct GPIOType {                            
+typedef struct{                            
     u32 CRL;					/* Port configuration register low		*/
     u32 CRH;					/* Port configuration register high		*/
     u32 IDR;					/* Port input data register 			*/    
@@ -82,5 +82,10 @@ typedef GPIOType *	pGPIOType;
 #define	FIRST_BIT_LOCATION				((u8) 0x01)
 
 
+
+static void GPIO_vidPinLocation(u8 u8PinNameCpy,  
+								volatile pGPIOType * ppGPIOTypePortNameCpy,
+								u32 * pu32PinPositionCpy);
 #endif 
+
 		

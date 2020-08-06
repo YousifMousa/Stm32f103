@@ -20,7 +20,6 @@
 *
 *************************************************************************************************/
 
-/**					Std_types 	Gurad to Avoid Multiple Inclusion					 **/
 #ifndef _STD_TYPES_H_
 #define _STD_TYPES_H_
 
@@ -35,7 +34,11 @@ typedef signed short int s16 ;
 
 typedef unsigned long int u32;
 
+typedef unsigned long int * pu32;
+
 typedef signed  long int s32 ;
+
+typedef signed long int * ps32;
 
 typedef float f32;
 
@@ -50,6 +53,7 @@ typedef const u32 u32UnaccessibleType ;
 typedef const u32 u32ReadOnlyType;
 
 typedef volatile u32 u32VolatileType ;
+
 
 typedef enum error{
 	OK = 0,

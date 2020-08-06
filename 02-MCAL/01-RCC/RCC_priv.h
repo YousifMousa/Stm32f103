@@ -52,5 +52,6 @@ typedef struct RCCType {
 
 
 #define ENABLE 				((u8) 0xff)
+
 #endif 
 		

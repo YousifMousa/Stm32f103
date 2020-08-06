@@ -306,10 +306,10 @@ GPIO_ErrorStatusType GPIO_enuSetPinDir(u8 const u8PinNameCpy, u8 const u8PinDirC
 /*              	- GPIO_enuSetMode(GPIOA_PIN_01, GPIO_INPUT_ANALOG);			*/
 /*																				*/
 /********************************************************************************/
-GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy 
-
+GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy );
 
 
 
 
 #endif
+

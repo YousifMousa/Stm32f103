@@ -36,6 +36,8 @@
 /*							GLOBAL VARIABLES								*/
 /****************************************************************************/
 
+
+
 /****************************************************************************/
 /*							FUNCTION IMPLEMENTAIONS 						*/
 /****************************************************************************/
@@ -102,7 +104,7 @@ GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy )
 /*	This pointer is used to chose which register is used in control			*/
 /*	depending on the pin if it is in the upper half of the port CRH is used	*/
 /*	if it is in the lower part CRL is used.									*/
-	volatile u32 * pu32ControlRegisterLoc = &GPIOA->CRL;
+	volatile u32 * pu32ControlRegisterLoc = &(GPIOA->CRL);
 	
 /*	u32PinPositionLoc is used to determine which bits in the 32  			*/
 /* 	bit-regieter we are going to change.									*/
@@ -187,14 +189,14 @@ GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy )
 /*	Register.																*/
 		if (u32PinPositionLoc < LOWER_CONFIG_REG ){
 /* 	Selecting the lower register  for configuration.						*/
-			pu32ControlRegisterLoc = &pGPIOTypePortNameLoc->CRH;
+			pu32ControlRegisterLoc = &(pGPIOTypePortNameLoc->CRL);
 		}
 		else{
 /* 	Get the position of the bit in the higher register.						*/
 			u32PinPositionLoc =
 					u32PinPositionLoc %  NUMBER_OF_BITS_IN_REGISTER;
 /*	selelcting the higher register for mode configration.					*/
-			pu32ControlRegisterLoc = &pGPIOTypePortNameLoc->CRH;
+			pu32ControlRegisterLoc = &(pGPIOTypePortNameLoc->CRH);
 		}
 		
 		*pu32ControlRegisterLoc |= 
@@ -238,6 +240,7 @@ GPIO_ErrorStatusType GPIO_enuTogglePin(u8 const u8PinNameCpy){
     return enuErrorStatusLoc; 
 }
     
+	
 /****************************************************************************/
 /*							Static FUNCTIONS								*/
 /****************************************************************************/
@@ -267,5 +270,4 @@ static void GPIO_vidPinLocation(u8 u8PinNameCpy,
 /* 	Assign the pointer pGPIOTypePortNameLoc to PORTB address.				*/
 			*ppGPIOTypePortNameCpy = (volatile pGPIOType) GPIOC;
         }									
-	
 }

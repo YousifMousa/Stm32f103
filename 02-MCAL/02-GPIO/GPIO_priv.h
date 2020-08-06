@@ -80,7 +80,6 @@ typedef struct GPIOType {
 #define NUMBER_OF_CNF_BITS				((u8) 0x04)
 #define	FIRST_BIT_LOCATION				((u8) 0x01)
 
-#define TOGGLE                          ((u8) 0xff)
 
 #endif 
 		

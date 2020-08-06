@@ -131,9 +131,9 @@
 #define GPIOB_PIN_15			GPIO_PIN_NUM_28	
                                              
 /*                    		PORTC			 									*/
-#define GPIOC_PIN13				GPIO_PIN_NUM_29	
-#define GPIOC_PIN14				GPIO_PIN_NUM_30
-#define GPIOC_PIN15				GPIO_PIN_NUM_31
+#define GPIOC_PIN_13			GPIO_PIN_NUM_29	
+#define GPIOC_PIN_14			GPIO_PIN_NUM_30
+#define GPIOC_PIN_15			GPIO_PIN_NUM_31
 
 
 /*	Error Status of a function. there are many possible errors that can	happen	*/
@@ -204,8 +204,9 @@ void GPIO_vidInit(void);
 /*               is defined earlier in this file (GPIO_int.h).                  */
 /*                                                                              */
 /*   Input       :                                                              */
-/*                   - u8PinNameCpy : Name of the pin defined earlier in this   */
-/*               file.                                                          */
+/*                   - u8PinNameCpy : Name of the pin defined earlier in the	*/
+/*					GPIO_int.h file.											*/
+/*																				*/
 /*                   - u8PinValueCpy: Value that the pin take which can be      */
 /*               GPIO_HIGH or GPIO_LOW.                                         */
 /*                                                                              */
@@ -214,8 +215,7 @@ void GPIO_vidInit(void);
 /*               reports any errors happened in the function.                   */
 /*																				*/
 /*   Example     :                                                              */
-/*                   - GPIO_enuSetPinValue(GPIOF_PIN0, GPIO_HIGH);              */
-/*                   - GPIO_enuSetPinValue(GPIO_PIN_NUM_38, GPIO_LOW);          */
+/*                   - GPIO_enuSetPinValue(GPIOA_PIN_00, GPIO_HIGH);			*/
 /*                                                                              */
 /********************************************************************************/
 GPIO_ErrorStatusType GPIO_enuSetPinValue(u8 const u8PinNameCpy, u8 const u8PinValueCpy);
@@ -228,9 +228,8 @@ GPIO_ErrorStatusType GPIO_enuSetPinValue(u8 const u8PinNameCpy, u8 const u8PinVa
 /*                   GPIO_enuTogglePin                                          */
 /*                                                                              */
 /*   Description:                                                               */
-/*                   This function is used to Toggle a pin to either HIGH or    */
-/*               LOW or GPIO_HIGH this function takes the name of the pin       */
-/*               that is defined earlier in this file (GPIO_int.h).             */
+/*                   This function is used to Toggle a pin from high to low or 	*/
+/*               or from low to high depending on its previous state.			*/
 /*                                                                              */
 /*   Input       :                                                              */
 /*                   - u8PinNameCpy  : Name of the pin defined earlier in this  */
@@ -241,11 +240,9 @@ GPIO_ErrorStatusType GPIO_enuSetPinValue(u8 const u8PinNameCpy, u8 const u8PinVa
 /*               reports any errors happened in the function.                   */
 /*                                                                              */
 /*   Example     :                                                              */
-/*                   - GPIO_enuTogglePin(GPIOF_PIN0);                           */
-/*                   - GPIO_enuTogglePin(GPIO_PIN_NUM_38);                      */
+/*                   - GPIO_enuTogglePin(GPIOA_PIN_00);							*/
 /*                                                                              */
 /********************************************************************************/
-
 GPIO_ErrorStatusType GPIO_enuTogglePin(u8 const u8PinNameCpy);
 
 
@@ -270,8 +267,7 @@ GPIO_ErrorStatusType GPIO_enuTogglePin(u8 const u8PinNameCpy);
 /*                   - enuErrorStatusLoc : an error status of the function that */
 /*               reports any errors happened in the function.                   */
 /*   Example     :                                                              */
-/*               	- GPIO_enuSetPinDir(GPIOF_PIN0, GPIO_INPUT);				*/
-/*                	- GPIO_enuSetPinDir(GPIO_PIN_NUM_38, GPIO_OUTPUT);			*/
+/*               	- GPIO_enuSetPinDir(GPIOF_PIN_00, GPIO_INPUT);				*/
 /*                                                                              */
 /********************************************************************************/
 GPIO_ErrorStatusType GPIO_enuSetPinDir(u8 const u8PinNameCpy, u8 const u8PinDirCpy );
@@ -310,6 +306,10 @@ GPIO_ErrorStatusType GPIO_enuSetPinDir(u8 const u8PinNameCpy, u8 const u8PinDirC
 /*              	- GPIO_enuSetMode(GPIOA_PIN_01, GPIO_INPUT_ANALOG);			*/
 /*																				*/
 /********************************************************************************/
-GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy );
+GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy 
+
+
+
+
 
 #endif

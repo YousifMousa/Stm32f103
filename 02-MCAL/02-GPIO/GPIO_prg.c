@@ -162,7 +162,7 @@ GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy )
             u32PinPositionLoc = 
 				(u32)(u8PinNameCpy % PINS_PREV_TO_GPIOB) * NUMBER_OF_CNF_BITS;
 /*	Select GPIO port B														*/
-			pGPIOTypePortNameLoc = GPIOB;
+			pGPIOTypePortNameLoc = (volatile GPIOType *) GPIOB;
         }
 /*  check if the name (u8PinNameCpy) of the pin is in PORTC.				*/
         else{
@@ -170,8 +170,9 @@ GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy )
 			u32PinPositionLoc = (u32)((u8PinNameCpy % PINS_PREV_TO_GPIOC) + 
 									GPIOC_PINS_OFFSET) * NUMBER_OF_CNF_BITS;
 /*	Select GPIO port C														*/
-			pGPIOTypePortNameLoc = GPIOC;
+			pGPIOTypePortNameLoc = (volatile GPIOType *) GPIOC;
 		}
+		
 /*	Get the configuration and the mode bits.								*/
 		switch (u8ModeCpy){
 /*	In case its a general purpose output pin Pushpull.						*/
@@ -216,7 +217,8 @@ GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy )
 				u8GPIOModeLoc = INPUT_PULLDOWN_PULLUP_CNF_MODE;	
 				break;			
 		}
-		/*	Check on the location of the pin to operate on the lower or the higher 	*/
+		
+/*	Check on the location of the pin to operate on the lower or the higher 	*/
 /*	Register.																*/
 		if (u32PinPositionLoc < LOWER_CONFIG_REG ){
 /*	Setting the necesseray bits to one in the lower config register.		*/
@@ -247,65 +249,48 @@ GPIO_ErrorStatusType GPIO_enuSetMode(u8 const u8PinNameCpy, u8 const u8ModeCpy )
 GPIO_ErrorStatusType GPIO_enuTogglePin(u8 const u8PinNameCpy){
 /*	enuErrorStatusLoc is the error status of the function if any error		*/ 
 /*	happens in the function.												*/ 
-    GPIO_ErrorStatusType enuErrorStatusLoc = GPIO_NO_ERRORS;
+    GPIO_ErrorStatusType enuErrorStatusLoc = GPIO_NO_ERRORS_FOUND;
 
 /*	u32PinPositionLoc is used to determine which bit in the 32 bit regieter */
 /* 	we are going to change.													*/
     u32 u32PinPositionLoc = FIRST_BIT_LOCATION;
     
-/*  check the name is the range of available pins in the TM4C123GH6PM Microcontroller           */    
-    if(u8PinNameCpy > GPIO_MAX_NUM_PINS){
-/* if it is not in the range we assign the Error status enum fuction to the undefined name.     */
+/*	A local pointer to select which port the pin used in. It is initialized */
+/*	to GPIO port A.															*/
+    volatile GPIOType * pGPIOTypePortNameLoc = (volatile GPIOType *) GPIOA;
+
+/*  check the name is the range of available pins in the STM32f103c8t6 		*/
+/*	microcontroller.														*/    
+    if(u8PinNameCpy > GPIO_END_PIN){
+/* 	if it is not in the range of pin numbers, we assign the Error status	*/
+/*	enum Value to the undefined name.										*/
         enuErrorStatusLoc = GPIO_UNDEFINED_NAME;
     }
-/*  check if the name (u8PinNameCpy) of the pin is in PORTA.                                    */    
     else{
-        if(u8PinNameCpy <= GPIO_PORTA_MAX ){ 
-/*  if it is in range of PORTA, we calculate the position of the pin map register.              */
-            u8PinPositionLoc = u8PinPositionLoc << u8PinNameCpy;      
-/*  Toggle the Value in this register which toggles the pin value.                              */
-                GPIOA->DATA[u8PinPositionLoc] ^= TOGGLE;
+/*  check if the name (u8PinNameCpy) of the pin is in PORTA.				*/    
+        if(u8PinNameCpy <=  GPIOA_END){ 
+/* 	Assign the pointer pGPIOTypePortNameLoc to PORTA address.				*/
+			pGPIOTypePortNameLoc = (volatile GPIOType *) GPIOA;
         }
-/*  check if the name (u8PinNameCpy) of the pin is in PORTB.                                    */    
-        else if(u8PinNameCpy <= GPIO_PORTB_MAX ){
-/*  if it is in range of PORTB, we calculate the position of the pin map register.              */
-            u8PinPositionLoc = u8PinNameCpy % GPIO_MAX_NUM_PINS_IN_PORT; 
-            u8PinPositionLoc = GPIO_FIRST_PIN << u8PinPositionLoc; 
-/*  Toggle the Value in this register which toggles the pin value.                              */
-                GPIOB->DATA[u8PinPositionLoc] ^= TOGGLE;
+/*  check if the name (u8PinNameCpy) of the pin is in PORTB.				*/    
+        else if(u8PinNameCpy <= GPIOB_END ){
+/*  if it is in range of PORTB, we calculate the position of the pin.		*/
+            u32PinPositionLoc = u8PinNameCpy % PINS_PREV_TO_GPIOB; 
+/* 	Assign the pointer pGPIOTypePortNameLoc to PORTB address.				*/
+			pGPIOTypePortNameLoc = (volatile GPIOType *) GPIOB;
         }
-/*  check if the name (u8PinNameCpy) of the pin is in PORTC.                                    */    
-        else if(u8PinNameCpy <= GPIO_PORTC_MAX ){
-/*  if it is in range of PORTC, we calculate the position of the pin map register.              */
-            u8PinPositionLoc = u8PinNameCpy % GPIO_MAX_NUM_PINS_IN_PORT;
-            u8PinPositionLoc = GPIO_FIRST_PIN << u8PinPositionLoc; 
-/*  Toggle the Value in this register which toggles the pin value.                              */
-                GPIOC->DATA[u8PinPositionLoc] ^= TOGGLE;
+/*  check if the name (u8PinNameCpy) of the pin is in PORTC.				*/    
+        else {
+/*  if it is in range of PORTC, we calculate the position of the pin.		*/
+			u32PinPositionLoc = (u32)((u8PinNameCpy % PINS_PREV_TO_GPIOC) + 
+									GPIOC_PINS_OFFSET);
+/* 	Assign the pointer pGPIOTypePortNameLoc to PORTB address.				*/
+			pGPIOTypePortNameLoc = (volatile GPIOType *) GPIOC;
         }
-/*  check if the name (u8PinNameCpy) of the pin is in PORTD.                                    */    
-        else if(u8PinNameCpy <= GPIO_PORTD_MAX ){
-/*  if it is in range of PORTD, we calculate the position of the pin map register.              */
-            u8PinPositionLoc = u8PinNameCpy % GPIO_MAX_NUM_PINS_IN_PORT; 
-            u8PinPositionLoc = GPIO_FIRST_PIN << u8PinPositionLoc; 
-/*  Toggle the Value in this register which toggles the pin value.                              */
-                GPIOD->DATA[u8PinPositionLoc] ^= TOGGLE;
-        }
-/*  check if the name (u8PinNameCpy) of the pin is in PORTE.                                    */    
-        else if(u8PinNameCpy <= GPIO_PORTE_MAX ){
-/*  if it is in range of PORTE, we calculate the position of the pin map register.              */
-            u8PinPositionLoc = u8PinNameCpy % GPIO_MAX_NUM_PINS_IN_PORT;
-            u8PinPositionLoc = GPIO_FIRST_PIN << u8PinPositionLoc; 
-/*  Toggle the Value in this register which toggles the pin value.                              */
-                GPIOE->DATA[u8PinPositionLoc] ^= TOGGLE;
-        }
-/*  check if the name (u8PinNameCpy) of the pin is in PORTF.                                    */    
-        else{
-/*  if it is in range of PORTF, we calculate the position of the pin map register.              */
-            u8PinPositionLoc = u8PinNameCpy - GPIOF_START_PIN; 
-            u8PinPositionLoc = GPIO_FIRST_PIN << u8PinPositionLoc; 
-/*  Toggle the Value in this register which toggles the pin value.                              */
-                GPIOF->DATA[u8PinPositionLoc] = HIGH;
-        }
+		
+/*	Toggle the pin in the selected port.									*/
+		pGPIOTypePortNameLoc->ODR ^= 
+				(FIRST_BIT_LOCATION<<u32PinPositionLoc);
     }
     return enuErrorStatusLoc; 
 }
